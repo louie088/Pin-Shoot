@@ -37,12 +37,14 @@ body {
 
 /* ✅ APP CONTAINER (glass overlay) */
 .app {
-    width: 420px;
+    width: 100%;
+    max-width: 420px;
     padding: 20px;
     min-height: 100vh;
+    margin: 0 auto;
 
-    background: rgba(0, 0, 0, 0.80);
-    backdrop-filter: blur(3px);
+    background: rgba(0, 0, 0, 0.65);  /* lighter overlay */
+    backdrop-filter: blur(1px);       /* less blur */
 }
 
 .title {
