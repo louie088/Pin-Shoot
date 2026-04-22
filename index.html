@@ -17,10 +17,15 @@
 
 <style>
 .logo {
-    width: 55%;
-    max-width: 200px;
+    position: absolute;
+    top: -10px;          /* adjust up/down */
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 70%;          /* 👈 make it bigger */
+    max-width: 260px;
+
     display: block;
-    margin: 0 auto 2px auto;
 }
 
 /* ✅ FULL SCREEN BACKGROUND (your image) */
@@ -54,11 +59,8 @@ backdrop-filter: blur(1px);
 }
 
 .title {
-    text-align: center;
-    font-weight: 900;
-    line-height: 1.1;
-    margin-bottom: 5px;
-    text-transform: uppercase;
+    position: relative;
+    height: 0; /* removes vertical space */
 }
 
 .title .main {
