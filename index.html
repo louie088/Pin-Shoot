@@ -151,7 +151,7 @@ button {
 
 .reset-all { background: #1e5eff; }
 .stats { background: #444; }
-.reset-round { background: #d32f2f; }
+.rules { background: #2e7d32; }  /* nice green */
 
 </style>
 </head>
@@ -232,13 +232,32 @@ function resetAll() {
     render();
 }
 
-function resetRound() {
-    const r = prompt("Reset which round? (1-5)");
-    const idx = parseInt(r) - 1;
-    if (idx >= 0 && idx < rounds) {
-        data[idx] = data[idx].map(() => false);
-        render();
-    }
+    function showRules() {
+    alert(
+`Weekly pin shoots are held on
+
+Mondays at 6:30 PM year-round.
+
+5 shots per station, 1 shot at a time.
+
+(Please arrive a few minutes early to sign up.)
+
+25 Shots Total
+
+Open sight straight wall pistol cartridge 9mm to 44 Magnum
+
+Steel pins are used.
+
+The cost to participate is $6.00.
+$2.50 goes towards the evening prize,
+$2.50 goes to the club,
+$1.00 goes to tip the pin setter.
+
+If there is a National Holiday on Monday,
+the pistol shoot is canceled.
+
+These shoots are open to the public.`
+    );
 }
 
 function showStats() {
