@@ -211,7 +211,7 @@ button {
   </div>
 </div>
 
-<!-- RESET POPUP -->
+<!-- RESET CONFIRM POPUP -->
 <div id="resetPopup" class="popup">
   <div class="popup-content" style="text-align:center;">
     <h2>RESET ALL?</h2>
@@ -221,15 +221,6 @@ button {
         <button onclick="confirmReset()" style="background:#d32f2f;">YES</button>
         <button onclick="closeResetConfirm()" style="background:#555;">CANCEL</button>
     </div>
-  </div>
-</div>
-
-<!-- STATS POPUP -->
-<div id="statsPopup" class="popup">
-  <div class="popup-content">
-    <h2>STATS</h2>
-    <div class="popup-text" id="statsContent"></div>
-    <button onclick="closeStats()">CLOSE</button>
   </div>
 </div>
 
@@ -278,7 +269,7 @@ function render() {
     document.getElementById("totalHits").textContent = total;
 }
 
-/* RESET */
+/* RESET CONFIRM */
 function openResetConfirm() {
     document.getElementById("resetPopup").style.display = "block";
 }
@@ -302,29 +293,19 @@ function closeRules() {
     document.getElementById("rulesPopup").style.display = "none";
 }
 
-/* STATS POPUP */
-function showStats() {
-    let total = data.flat().filter(Boolean).length;
-
-    let text = data.map((r, i) =>
-        `Round ${i+1}: ${r.filter(Boolean).length} hits`
-    ).join("<br>");
-
-    text += `<br><br><b>Total Hits: ${total}</b>`;
-
-    document.getElementById("statsContent").innerHTML = text;
-    document.getElementById("statsPopup").style.display = "block";
-}
-
-function closeStats() {
-    document.getElementById("statsPopup").style.display = "none";
-}
-
 /* CLICK OUTSIDE CLOSE */
 window.onclick = function(e) {
     if (e.target.classList.contains("popup")) {
         e.target.style.display = "none";
     }
+}
+
+function showStats() {
+    let msg = data.map((r, i) =>
+        `Round ${i+1}: ${r.filter(Boolean).length} hits`
+    ).join("\n");
+
+    alert(msg);
 }
 
 render();
