@@ -3,11 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 
+<!-- iPhone responsive + safe area support -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 
+<!-- iOS "app mode" -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
+<!-- Home screen icon -->
 <link rel="apple-touch-icon" href="icon.png">
 
 <title>EMSC 30Y Steel Pin Shoot</title>
@@ -15,10 +18,12 @@
 <style>
 .logo {
     width: 180px;
+    height: auto;
     display: block;
-    margin: 0 auto;
+    margin: 0 auto 0px auto;
 }
 
+/* ✅ FULL SCREEN BACKGROUND (your image) */
 html, body {
     margin: 0;
     padding: 0;
@@ -26,6 +31,7 @@ html, body {
     background: #111 url("background3.png") center bottom / cover no-repeat;
 }
 
+/* ✅ BODY LAYOUT */
 body {
     font-family: Arial, sans-serif;
     color: white;
@@ -35,19 +41,43 @@ body {
     padding-top: env(safe-area-inset-top, 10px);
 }
 
+/* ✅ APP CONTAINER (glass overlay) */
 .app {
     width: 100%;
     max-width: 420px;
     padding: 12px 16px;
     min-height: 100vh;
     margin: 0 auto;
-    background: rgba(0, 0, 0, 0.30);
-    backdrop-filter: blur(1px);
+
+background: rgba(0, 0, 0, 0.30);
+backdrop-filter: blur(1px);
 }
 
 .title {
     text-align: center;
+    font-weight: 900;
+    line-height: 1.1;
     margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.title .main {
+    font-size: 52px;
+    color: white;
+    -webkit-text-stroke: 1px black;
+}
+
+.title .sub {
+    font-size: 42px;
+    color: white;
+    -webkit-text-stroke: 1px black;
+}
+
+.title .bottom {
+    font-size: 28px;
+    color: white;
+    -webkit-text-stroke: 1px black;
+    margin-top: 5px;
 }
 
 .grid {
@@ -121,42 +151,8 @@ button {
 
 .reset-all { background: #1e5eff; }
 .stats { background: #444; }
-.rules { background: #2e7d32; }
+.rules { background: #2e7d32; }  /* nice green */
 
-/* POPUPS */
-.popup {
-    display: none;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 1000;
-}
-
-.popup-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 400px;
-    max-height: 80%;
-    background: #111;
-    padding: 20px;
-    border-radius: 10px;
-    border: 2px solid #444;
-    display: flex;
-    flex-direction: column;
-}
-
-.popup-text {
-    overflow-y: auto;
-    font-size: 14px;
-    line-height: 1.4;
-    margin-bottom: 15px;
-}
 </style>
 </head>
 
@@ -164,64 +160,22 @@ button {
 <div class="app">
 
 <div class="title">
-    <img src="logo.png" class="logo">
+    <img src="logo.png" class="logo" alt="EMSC Steel Pin Shoot Logo">
 </div>
 
-<div class="grid" id="grid"></div>
+    <div class="grid" id="grid"></div>
 
-<div class="total">
-    <div><b>TOTAL HITS</b></div>
-    <div id="totalHits" style="font-size:28px;color:red;">0</div>
-</div>
-
-<div class="buttons">
-    <button class="reset-all" onclick="openResetConfirm()">RESET ALL</button>
-    <button class="stats" onclick="showStats()">STATS</button>
-    <button class="rules" onclick="showRules()">RULES</button>
-</div>
-
-</div>
-
-<!-- RULES POPUP -->
-<div id="rulesPopup" class="popup">
-  <div class="popup-content">
-    <h2>RULES</h2>
-    <div class="popup-text">
-      Weekly pin shoots are held on Mondays at 6:30 PM year-round.<br><br>
-
-      5 shots per station, 1 shot at a time<br>
-      25 Shots Total<br><br>
-
-      Cost: $6.00<br><br>
-
-      <b>Classification</b><br>
-      1A: 0–18<br>
-      2A: 19–22<br>
-      3A: 23–24<br>
-      4A: 25<br><br>
-
-      <b>Advancement</b><br>
-      1A → 2A: 4 scores of 19+<br>
-      2A → 3A: 4 scores of 23+<br>
-      3A → 4A: 4 scores of 25<br><br>
-
-      Within 10 weeks.
+    <div class="total">
+        <div><b>TOTAL HITS</b></div>
+        <div id="totalHits" style="font-size:28px;color:red;">0</div>
     </div>
-    <button onclick="closeRules()">CLOSE</button>
-  </div>
-</div>
 
-<!-- RESET CONFIRM POPUP -->
-<div id="resetPopup" class="popup">
-  <div class="popup-content" style="text-align:center;">
-    <h2>RESET ALL?</h2>
-    <p>Are you sure you want to clear all scores?</p>
-
-    <div style="display:flex; gap:10px;">
-        <button onclick="confirmReset()" style="background:#d32f2f;">YES</button>
-        <button onclick="closeResetConfirm()" style="background:#555;">CANCEL</button>
+    <div class="buttons">
+        <button class="reset-all" onclick="resetAll()">RESET ALL</button>
+        <button class="stats" onclick="showStats()">STATS</button>
+        <button class="rules" onclick="showRules()">RULES</button>
     </div>
-  </div>
+
 </div>
 
 <script>
@@ -236,6 +190,7 @@ let data = Array.from({length: rounds}, () =>
 
 function render() {
     grid.innerHTML = "";
+
     let total = 0;
 
     data.forEach((round, r) => {
@@ -245,6 +200,7 @@ function render() {
         const label = document.createElement("div");
         label.className = "label";
         label.textContent = "ROUND " + (r + 1);
+
         row.appendChild(label);
 
         round.forEach((hit, s) => {
@@ -255,12 +211,14 @@ function render() {
                 render();
             };
             row.appendChild(box);
+
             if (hit) total++;
         });
 
         const score = document.createElement("div");
         score.className = "score";
         score.textContent = round.filter(Boolean).length;
+
         row.appendChild(score);
 
         grid.appendChild(row);
@@ -269,35 +227,52 @@ function render() {
     document.getElementById("totalHits").textContent = total;
 }
 
-/* RESET CONFIRM */
-function openResetConfirm() {
-    document.getElementById("resetPopup").style.display = "block";
-}
-
-function closeResetConfirm() {
-    document.getElementById("resetPopup").style.display = "none";
-}
-
-function confirmReset() {
+function resetAll() {
     data = data.map(r => r.map(() => false));
     render();
-    closeResetConfirm();
 }
 
-/* RULES */
-function showRules() {
-    document.getElementById("rulesPopup").style.display = "block";
-}
+    function showRules() {
+    alert(
+`Weekly pin shoots are held on
+Mondays at 6:30 PM year-round.
+(Please arrive a few minutes early to sign up.)
 
-function closeRules() {
-    document.getElementById("rulesPopup").style.display = "none";
-}
+5 shots per station, 1 shot at a time.
+25 Shots Total
+Open sight straight wall pistol cartridge 9mm to 44 Magnum
+Steel pins are used.
 
-/* CLICK OUTSIDE CLOSE */
-window.onclick = function(e) {
-    if (e.target.classList.contains("popup")) {
-        e.target.style.display = "none";
-    }
+The cost to participate is $6.00.
+$2.50 goes towards the evening prize,
+$2.50 goes to the club,
+$1.00 goes to tip the pin setter.
+
+If there is a National Holiday on Monday, the pistol shoot is canceled.
+
+These shoots are open to the public.
+
+Classification Rules
+
+All new shooters will compete in Class 4A for their first shoot.
+
+Their first score will determine their classification:
+
+1A: 0–18
+2A: 19–22
+3A: 23–24
+4A: 25
+
+Advancement
+
+Shooters may advance to a higher classification based on performance:
+
+1A → 2A: After 4 scores of 19 or higher
+2A → 3A: After 4 scores of 23 or higher
+3A → 4A: After 4 perfect scores of 25
+
+These scores must be achieved within a 10-week period.`
+    );
 }
 
 function showStats() {
