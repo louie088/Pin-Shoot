@@ -15,9 +15,8 @@
 <style>
 .logo {
     width: 180px;
-    height: auto;
     display: block;
-    margin: 0 auto 0px auto;
+    margin: 0 auto;
 }
 
 html, body {
@@ -124,14 +123,14 @@ button {
 .stats { background: #444; }
 .rules { background: #2e7d32; }
 
-/* 🔥 POPUP STYLES */
+/* POPUPS */
 .popup {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
+    top: 0;
+    left: 0;
     background: rgba(0,0,0,0.7);
     z-index: 1000;
 }
@@ -158,12 +157,6 @@ button {
     line-height: 1.4;
     margin-bottom: 15px;
 }
-
-.popup-content button {
-    background: #2e7d32;
-    padding: 10px;
-    border-radius: 6px;
-}
 </style>
 </head>
 
@@ -182,52 +175,61 @@ button {
 </div>
 
 <div class="buttons">
-    <button class="reset-all" onclick="resetAll()">RESET ALL</button>
+    <button class="reset-all" onclick="openResetConfirm()">RESET ALL</button>
     <button class="stats" onclick="showStats()">STATS</button>
     <button class="rules" onclick="showRules()">RULES</button>
 </div>
 
 </div>
 
-<!-- 🔥 RULES POPUP -->
+<!-- RULES POPUP -->
 <div id="rulesPopup" class="popup">
   <div class="popup-content">
     <h2>RULES</h2>
-
     <div class="popup-text">
-      Weekly pin shoots are held on Mondays at 6:30 PM year-round.<br>
-      (Please arrive a few minutes early to sign up.)<br><br>
+      Weekly pin shoots are held on Mondays at 6:30 PM year-round.<br><br>
 
       5 shots per station, 1 shot at a time<br>
-      25 Shots Total<br>
-      Open sight straight wall pistol cartridge 9mm to 44 Magnum<br>
-      Steel pins are used<br><br>
+      25 Shots Total<br><br>
 
-      Cost: $6.00 ($2.50 prize / $2.50 club / $1.00 pin setter)<br><br>
+      Cost: $6.00<br><br>
 
-      If there is a National Holiday on Monday, the shoot is canceled.<br>
-      These shoots are open to the public.<br><br>
-
-      <b>Classification Rules</b><br>
-      All new shooters will compete in Class 4A for their first shoot.<br>
-      Their first score will determine their classification:<br><br>
-        
+      <b>Classification</b><br>
       1A: 0–18<br>
       2A: 19–22<br>
       3A: 23–24<br>
       4A: 25<br><br>
 
       <b>Advancement</b><br>
-      Shooters may advance to a higher classification based on performance:<br><br>
-        
-      1A → 2A: After 4 scores of 19 or higher<br>
-      2A → 3A: After 4 scores of 23 or higher<br>
-      3A → 4A: After 4 Perfect scores of 25<br><br>
+      1A → 2A: 4 scores of 19+<br>
+      2A → 3A: 4 scores of 23+<br>
+      3A → 4A: 4 scores of 25<br><br>
 
-      Must be achieved within a 10-week period.
+      Within 10 weeks.
     </div>
-
     <button onclick="closeRules()">CLOSE</button>
+  </div>
+</div>
+
+<!-- RESET POPUP -->
+<div id="resetPopup" class="popup">
+  <div class="popup-content" style="text-align:center;">
+    <h2>RESET ALL?</h2>
+    <p>Are you sure you want to clear all scores?</p>
+
+    <div style="display:flex; gap:10px;">
+        <button onclick="confirmReset()" style="background:#d32f2f;">YES</button>
+        <button onclick="closeResetConfirm()" style="background:#555;">CANCEL</button>
+    </div>
+  </div>
+</div>
+
+<!-- STATS POPUP -->
+<div id="statsPopup" class="popup">
+  <div class="popup-content">
+    <h2>STATS</h2>
+    <div class="popup-text" id="statsContent"></div>
+    <button onclick="closeStats()">CLOSE</button>
   </div>
 </div>
 
@@ -276,12 +278,22 @@ function render() {
     document.getElementById("totalHits").textContent = total;
 }
 
-function resetAll() {
-    data = data.map(r => r.map(() => false));
-    render();
+/* RESET */
+function openResetConfirm() {
+    document.getElementById("resetPopup").style.display = "block";
 }
 
-/* 🔥 POPUP FUNCTIONS */
+function closeResetConfirm() {
+    document.getElementById("resetPopup").style.display = "none";
+}
+
+function confirmReset() {
+    data = data.map(r => r.map(() => false));
+    render();
+    closeResetConfirm();
+}
+
+/* RULES */
 function showRules() {
     document.getElementById("rulesPopup").style.display = "block";
 }
@@ -290,19 +302,29 @@ function closeRules() {
     document.getElementById("rulesPopup").style.display = "none";
 }
 
-window.onclick = function(e) {
-    const popup = document.getElementById("rulesPopup");
-    if (e.target === popup) {
-        popup.style.display = "none";
-    }
+/* STATS POPUP */
+function showStats() {
+    let total = data.flat().filter(Boolean).length;
+
+    let text = data.map((r, i) =>
+        `Round ${i+1}: ${r.filter(Boolean).length} hits`
+    ).join("<br>");
+
+    text += `<br><br><b>Total Hits: ${total}</b>`;
+
+    document.getElementById("statsContent").innerHTML = text;
+    document.getElementById("statsPopup").style.display = "block";
 }
 
-function showStats() {
-    let msg = data.map((r, i) =>
-        `Round ${i+1}: ${r.filter(Boolean).length} hits`
-    ).join("\n");
+function closeStats() {
+    document.getElementById("statsPopup").style.display = "none";
+}
 
-    alert(msg);
+/* CLICK OUTSIDE CLOSE */
+window.onclick = function(e) {
+    if (e.target.classList.contains("popup")) {
+        e.target.style.display = "none";
+    }
 }
 
 render();
