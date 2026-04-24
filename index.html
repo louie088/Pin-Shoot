@@ -182,7 +182,7 @@ button {
 </div>
 
 <div class="buttons">
-    <button class="reset-all" onclick="resetAll()">RESET ALL</button>
+    <button class="reset-all" onclick="confirmReset()">RESET ALL</button>
     <button class="stats" onclick="showStats()">STATS</button>
     <button class="rules" onclick="showRules()">RULES</button>
 </div>
@@ -276,9 +276,11 @@ function render() {
     document.getElementById("totalHits").textContent = total;
 }
 
-function resetAll() {
-    data = data.map(r => r.map(() => false));
-    render();
+function confirmReset() {
+    if (confirm("Are you sure you want to reset all scores?")) {
+        data = data.map(r => r.map(() => false));
+        render();
+    }
 }
 
 /* 🔥 POPUP FUNCTIONS */
